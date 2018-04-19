@@ -43,6 +43,7 @@ export default EmberObject.extend(Ember.Evented, {
     options.type = messageType;
     options.from = 'inspectedWindow';
     options.applicationId = this.get('uniqueId');
+    options.name = this.get('namespace.applicationName');
     this.get('adapter').send(options);
   },
 

@@ -1,17 +1,10 @@
 import Component from '@ember/component';
 import { run } from '@ember/runloop';
-import { observer, computed } from '@ember/object';
+import { observer } from '@ember/object';
 import { getOwner } from '@ember/application';
 import { alias } from '@ember/object/computed';
 
 export default Component.extend({
-  model: computed('port.detectedApplications.[]', function() {
-    return this.get('port.detectedApplications').map(val => {
-      let name = val.split('__')[1];
-      return { name, val };
-    });
-  }),
-
   selectedApp: alias('port.applicationId'),
 
   selectedDidChange: observer('selectedApp', function() {
