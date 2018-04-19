@@ -49,26 +49,32 @@ var EMBER_VERSIONS_SUPPORTED = {{EMBER_VERSIONS_SUPPORTED}};
       window.EmberInspector = Ember.EmberInspectorDebugger = requireModule('ember-debug/main')['default'];
       Ember.EmberInspectorDebugger.Adapter = requireModule('ember-debug/adapters/' + adapter)['default'];
 
-      onApplicationStart(function appStarted(app) {
-        var isFirstBoot = !('__inspector__booted' in app);
-        app.__inspector__booted = true;
-        Ember.EmberInspectorDebugger.set('application', app);
-        Ember.EmberInspectorDebugger.start(true);
-        if (isFirstBoot) {
-          // Watch for app reset/destroy
-          app.reopen({
-            reset: function() {
-              this.__inspector__booted = false;
-              this._super.apply(this, arguments);
-            },
-            willDestroy: function() {
-              Ember.EmberInspectorDebugger.destroyContainer();
-              Ember.EmberInspectorDebugger.clear();
-              this._super.apply(this, arguments);
-            }
-          });
-        }
-      });
+      function bootApp() {
+        onApplicationStart(function appStarted(app) {
+          var isFirstBoot = !('__inspector__booted' in app);
+          app.__inspector__booted = true;
+          Ember.EmberInspectorDebugger.set('application', app);
+          Ember.EmberInspectorDebugger.start(true);
+          if (isFirstBoot) {
+            // Watch for app reset/destroy
+            app.reopen({
+              reset: function() {
+                this.__inspector__booted = false;
+                this._super.apply(this, arguments);
+              },
+              willDestroy: function() {
+                Ember.EmberInspectorDebugger.destroyContainer();
+                Ember.EmberInspectorDebugger.clear();
+                this._super.apply(this, arguments);
+              }
+            });
+          }
+        });
+      }
+
+      bootApp();
+
+      window.bootApp = bootApp;
     }
   });
 
@@ -102,6 +108,7 @@ var EMBER_VERSIONS_SUPPORTED = {{EMBER_VERSIONS_SUPPORTED}};
   // to determine when the application starts
   // but this definitely works
   function onApplicationStart(callback) {
+    debugger
     if (typeof Ember === 'undefined') {
       return;
     }

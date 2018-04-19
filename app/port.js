@@ -19,10 +19,13 @@ export default EmberObject.extend(Evented, {
       }
       // save list of application ids
       if (!detectedApplications.findBy('value', message.applicationId)) {
-        detectedApplications.pushObject({
+        const app = {
           name: message.name || message.applicationId.split('__')[1],
           value: message.applicationId
-        });
+        };
+        console.log('Detected app: ', app);
+        detectedApplications.pushObject(app);
+        console.log('All apps: ', this.get('detectedApplications'));
       }
 
       const applicationId = this.get('applicationId');

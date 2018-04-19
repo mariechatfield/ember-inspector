@@ -46,6 +46,8 @@ const EmberDebug = EmberObject.extend({
     return guidFor(this.get('owner'));
   }),
 
+  applicationName: computed.readOnly('_application.name'),
+
   started: false,
 
   // Using object shorthand syntax here is somehow having strange side effects.
@@ -60,6 +62,7 @@ const EmberDebug = EmberObject.extend({
     }
     if (!this.get('_application') && !this.get('isTesting')) {
       this.set('_application', getApplication());
+      console.log('APP: ', this.get('applicationName'), this.get('applicationId'));
     }
     this.set('started', true);
 
