@@ -119,7 +119,7 @@ var EMBER_VERSIONS_SUPPORTED = {{EMBER_VERSIONS_SUPPORTED}};
       if (app._readinessDeferrals === 0) {
         // App started
         callback(app);
-        break;
+        // break;
       }
     }
     Ember.Application.initializer({

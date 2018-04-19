@@ -78,6 +78,13 @@ export default EmberObject.extend(PortMixin, {
    * see: startup-wrapper.
    */
   sendBooted() {
+    this.get('namespace._applications').forEach(application => {
+      this.sendMessage('applicationBooted', {
+        booted: application.__inspector__booted,
+        application
+      });
+    });
+
     this.sendMessage('applicationBooted', {
       booted: this.get('application.__inspector__booted')
     });

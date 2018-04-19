@@ -1,5 +1,5 @@
 const Ember = window.Ember;
-const { Object: EmberObject, computed, run } = Ember;
+const { Object: EmberObject, computed, run, guidFor } = Ember;
 const { oneWay } = computed;
 
 export default EmberObject.extend(Ember.Evented, {
@@ -25,6 +25,11 @@ export default EmberObject.extend(Ember.Evented, {
     return `${this.get('namespace.applicationId')}__${window.location.href}__${this.get('now')}`;
   }),
 
+  getUniqueId(application) {
+    const applicationId = guidFor(application);
+    return `${applicationId}__${window.location.href}__${this.get('now')}`
+  },
+
   init() {
     this.get('adapter').onMessageReceived(message => {
       if (this.get('uniqueId') === message.applicationId || !message.applicationId) {
@@ -42,8 +47,15 @@ export default EmberObject.extend(Ember.Evented, {
   send(messageType, options = {}) {
     options.type = messageType;
     options.from = 'inspectedWindow';
-    options.applicationId = this.get('uniqueId');
-    options.name = this.get('namespace.applicationName');
+
+    if (options.application) {
+      options.applicationId = this.getUniqueId(options.application);
+      options.name = options.application.name;
+    } else {
+      options.applicationId = this.get('uniqueId');
+      options.name = this.get('namespace.applicationName');
+    }
+    console.log('SEND: ', messageType, options.name, options.applicationId);
     this.get('adapter').send(options);
   },
 

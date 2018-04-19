@@ -30,6 +30,10 @@ const EmberDebug = EmberObject.extend({
    */
   _application: null,
 
+  _applications: computed(function() {
+    return [];
+  }),
+
   owner: null,
 
   /**
